@@ -81,3 +81,22 @@ ansible-playbook --check playbooks/git_install.yml -i inventory.ini  -u root -t 
 ansible-playbook --check playbooks/git_install.yml -i inventory.ini  -u root -t git
 ansible-playbook playbooks/git_install.yml -i inventory.ini  -u root
 ```
+
+# Обработчики (Handlers)
+
+При выполнении задач в плейбуках периодически возникает необходимость перезапускать какой-либо сервис. Хорошая практика, - создать хэндлер (перезапуск сервиса) отдельно и связать его с таском.
+
+Обработчики отрабатывают, когда завершается весь сценарий!
+
+```yaml
+- hosts: webservers
+  tasks:
+    ...
+
+  handlers:
+    - name: restart nginx
+      ansible.builtin.service:
+        name: nginx
+        state: reloaded
+      become: yes
+```
