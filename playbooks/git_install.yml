@@ -1,10 +1,15 @@
 - hosts: webservers
-
+  # выполнить из под sudo
+  become: yes
   tasks:
+    - name: Update apt packages
+      ansible.builtin.apt:
+        update_cache: yes
+      tags: ["update"]
+
     - name: install git
       ansible.builtin.apt:
         name: git
         state: present
-        update_cache: yes
-      # выполнить из под sudo
-      become: yes
+      tags: ["git"]
+      

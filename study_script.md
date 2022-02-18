@@ -71,3 +71,13 @@ $ ansible all --limit do1 -i inventory.ini -m ping
 ```bash
 ansible-playbook playbooks/test_redis.yml -i inventory.ini -u root
 ```
+
+# Тэги
+
+С ростом количества задач плейбуки становятся достаточно большими. И при отладке сценария это может вызывать неудобства. Мы можем пометить задачи тегами и запускать их, когда это необходимо.
+
+```bash
+ansible-playbook --check playbooks/git_install.yml -i inventory.ini  -u root -t update
+ansible-playbook --check playbooks/git_install.yml -i inventory.ini  -u root -t git
+ansible-playbook playbooks/git_install.yml -i inventory.ini  -u root
+```
