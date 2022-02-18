@@ -1,5 +1,5 @@
 ```bash
-ssh root@167.99.131.124
+ssh root@do_test_1
 ```
 
 # Ad-hoc
@@ -9,17 +9,17 @@ ssh root@167.99.131.124
 ```bash
 # Проверяет доступность сервера по ip-адресу (ad-hoc)
 # all – запрос выполняется для всех указанных машин
-# 167.99.131.124 – ip-адрес моей машины
+# do_test_1 – ip-адрес моей машины
 # root – пользователь для подключения по ssh
 # ping – используемая команда (модуль ansible)
-ansible all -i '167.99.131.124, ' -u root -m ping
+ansible all -i 'do_test_1, ' -u root -m ping
 
-ansible all -i '167.99.131.124, ' -u root -m command -a 'uptime'
-ansible all -i '167.99.131.124, ' -u root -a 'uptime'
+ansible all -i 'do_test_1, ' -u root -m command -a 'uptime'
+ansible all -i 'do_test_1, ' -u root -a 'uptime'
 
 # Файл инвентаризации
 #    помогает не указывать каждый раз список хостов
-echo "167.99.131.124" > inventory.ini
+echo "do_test_1" > inventory.ini
 
 ansible all -i inventory.ini -u root -m ping
 ```
@@ -38,9 +38,36 @@ ansible <group_name> -i inventory.ini -u root -a 'uptime'
 
 ```
 # inventory.ini
-do1 ansible_host=167.99.131.124
+do1 ansible_host=do_test_1
 
 # флага --limit выполняет запросы на конкретном сервере
 $ ansible all --limit do1 -i inventory.ini -m ping
 ```
 
+# Плейбуки
+
+Одним из основных понятий в Ansible является плейбук. Это просто yaml-файл, в котором мы указываем, какие задачи и на каких серверах будут выполняться.
+
+```yaml
+# На какой группе серверов
+- hosts: webservers
+
+  tasks:
+    - name: install redis server
+      # apt-get update && apt-get install redis-server
+      ansible.builtin.apt: # имя модуля Ansible
+        name: redis-server
+        state: present
+        update_cache: yes
+
+    - name: remove redis server
+      # apt-get remove redis-server
+      ansible.builtin.apt:
+        name: redis-server
+        state: absent
+
+```
+
+```bash
+ansible-playbook playbooks/test_redis.yml -i inventory.ini -u root
+```
