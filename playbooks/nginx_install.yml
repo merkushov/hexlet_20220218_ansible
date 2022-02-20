@@ -1,5 +1,8 @@
 - hosts: webservers
   become: yes
+  vars:
+    root_dir: /var/tmp/www
+    nginx_port: 80
   tasks:
     - name: Update apt packages
       ansible.builtin.apt:
@@ -10,18 +13,24 @@
         name: nginx
         state: latest
 
+    - name: creates www directory
+      ansible.builtin.file:
+        path: "{{root_dir}}"
+        state: directory
+
     - name: copy index.html
       ansible.builtin.copy:
         src: ../services/nginx/index.html
-        dest: /usr/share/nginx/html/index.html
+        dest: "{{root_dir}}/index.html"
       notify:
         - restart nginx
       tags: ["copy"]
 
     - name: update nginx config
-      ansible.builtin.copy:
-        src: ../services/nginx/nginx.conf
+      ansible.builtin.template:
+        src: ../services/nginx/templates/nginx.conf.j2
         dest: /etc/nginx/nginx.conf
+        # dest: "{{root_dir}}/nginx.conf"
       notify:
         - restart nginx
       tags: ["copy"]

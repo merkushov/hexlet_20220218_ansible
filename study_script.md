@@ -100,3 +100,29 @@ ansible-playbook playbooks/git_install.yml -i inventory.ini  -u root
         state: reloaded
       become: yes
 ```
+
+# Переменные
+
+...позволяют описывать конфигурационные параметры в одном месте и переиспользовать их многократно.
+
+```yaml
+- hosts: webservers
+  vars:
+    root_dir: /var/tmp/www
+  tasks:
+    - name: update nginix config
+      # template прогоняет файл через Jinja 2
+      ansible.builtin.template:
+        src: templates/nginx.conf.j2
+        dest: "{{root_dir}}/nginx.conf"
+
+    - name: update index.html
+      ansible.builtin.copy:
+        src: files/index.html
+        # переменная из vars
+        dest: "{{root_dir}}/index.html"
+```
+
+```bash
+ansible-playbook playbooks/nginx_install.yml -i inventory.ini -u root
+```
