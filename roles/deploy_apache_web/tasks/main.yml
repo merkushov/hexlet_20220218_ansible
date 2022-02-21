@@ -1,0 +1,24 @@
+---
+# tasks file for deploy_apache_web
+
+- name: install apache2 package
+  apt:
+    name: apache2
+    state: latest
+
+- name: start apache2
+  service:
+    name: apache2
+    enabled: true
+    state: started
+
+- name: copy index.html file
+  copy: src=index.html dest={{ dstfolder }}/index.html mode=0555
+
+- name: copy images
+  copy: src={{ item }} dest={{ dstfolder }}
+
+  loop:
+    - "bike_1.jpeg"
+    - "bike_2.png"
+    - "bike_3.png"

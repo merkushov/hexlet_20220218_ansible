@@ -1,0 +1,8 @@
+---
+
+- name: Deploy
+  hosts: webservers
+  become: yes
+
+  roles:
+    - deploy_apache_web
