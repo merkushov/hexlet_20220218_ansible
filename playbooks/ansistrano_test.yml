@@ -1,0 +1,10 @@
+---
+- name: Deploy
+  hosts: webservers
+
+  vars:
+    ansistrano_deploy_from: ../app/
+    ansistrano_deploy_to: "/var/www/app"
+    ansistrano_keep_releases: 3
+  roles:
+  - { role: ansistrano.deploy }
