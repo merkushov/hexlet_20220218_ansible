@@ -138,5 +138,17 @@ Ansible выделяет повторяющиеся вещи в роли. Эти
 ansible-galaxy init deploy_apache_web
 
 # запустить роль
-ansible-playbook -i inventory.ini -u root roles/deploy-example.yml
+ansible-playbook -i inventory.ini -u root roles/deploy-example.**yml**
+```
+
+# rsync
+
+Позволяет синхронизировать директории, в том числе и удалённо.
+
+```bash
+# однократно синхронизировать локально
+rsync -r test/ test_1
+
+# однократно синхронизировать с удалённой машиной
+rsync -zaP test/ --rsh='ssh -p 22' root@do_test_1:/tmp/test_2
 ```
